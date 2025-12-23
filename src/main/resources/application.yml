@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: local
+    include: local
+  application:
+    name: ai-digest-backend
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none

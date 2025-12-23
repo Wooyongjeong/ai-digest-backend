@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://your-rds-endpoint:3306/newsletter
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate # 운영은 엔티티와 DB 구조가 맞는지 체크만 함
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      password: ${REDIS_PASSWORD}

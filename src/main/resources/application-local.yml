@@ -1,0 +1,29 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+    session:
+      store-type: redis
+      timeout: 30m
+      redis:
+        namespace: ai-digest:session
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:ai-digest
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
