@@ -4,6 +4,7 @@ import com.github.wooyong.aidigest.dto.LoginRequest;
 import com.github.wooyong.aidigest.dto.SignupRequest;
 import com.github.wooyong.aidigest.entity.User;
 import com.github.wooyong.aidigest.service.AuthService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +32,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         User user = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(user); // TODO tmp
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-        authService.logout();
+    public ResponseEntity<?> logout(HttpSession session) {
+        authService.logout(session);
         return ResponseEntity.ok().build();
     }
 }

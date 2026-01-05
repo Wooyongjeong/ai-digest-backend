@@ -2,6 +2,7 @@ package com.github.wooyong.aidigest.service;
 
 import com.github.wooyong.aidigest.entity.User;
 import com.github.wooyong.aidigest.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,8 +55,9 @@ public class AuthService {
         return user;
     }
 
-    public void logout() {
+    public void logout(HttpSession session) {
         SecurityContextHolder.clearContext();
+        session.invalidate();
         log.info("User logged out");
     }
 }
