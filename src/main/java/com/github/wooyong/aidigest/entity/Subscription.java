@@ -37,4 +37,9 @@ public class Subscription extends BaseTimeEntity {
         this.topic = topic;
         this.deliveryTime = deliveryTime;
     }
+
+    public void connectKeywords(List<Keyword> keywords) {
+        this.keywords = keywords;
+        keywords.forEach(keyword -> keyword.connectSubscription(this));
+    }
 }

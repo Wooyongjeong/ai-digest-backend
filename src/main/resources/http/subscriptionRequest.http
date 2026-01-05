@@ -1,0 +1,11 @@
+### 구독추가
+POST localhost:8080/api/v1/subscriptions
+Content-Type: application/json
+
+{
+  "topic": "NVDA",
+  "keywords": ["중국", "HBM4", "트럼프", "정부"]
+}
+
+### 구독 조회(단건)
+GET localhost:8080/api/v1/subscriptions/1
