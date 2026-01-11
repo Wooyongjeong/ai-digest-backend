@@ -14,7 +14,7 @@ public class SubscriptionResponse {
     private String topic;
     private List<String> keywords;
 
-    public static SubscriptionResponse of(Subscription subscription) {
+    public static SubscriptionResponse fromEntity(Subscription subscription) {
         return new SubscriptionResponse(
                 subscription.getId(),
                 subscription.getTopic().getName(),

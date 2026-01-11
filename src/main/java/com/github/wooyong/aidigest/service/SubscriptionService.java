@@ -6,6 +6,7 @@ import com.github.wooyong.aidigest.entity.Keyword;
 import com.github.wooyong.aidigest.entity.Subscription;
 import com.github.wooyong.aidigest.entity.Topic;
 import com.github.wooyong.aidigest.entity.User;
+import com.github.wooyong.aidigest.exception.SubscriptionNotFoundException;
 import com.github.wooyong.aidigest.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class SubscriptionService {
     private final TopicService topicService;
 
     @Transactional
-    public Subscription createSubscription(SubscriptionCreateRequest createRequest, User user) {
+    public SubscriptionResponse createSubscription(SubscriptionCreateRequest createRequest, User user) {
         String topicName = createRequest.getTopic();
         Topic topic = topicService.createOrGetTopic(topicName);
         List<Keyword> keywords = createRequest.getKeywords().stream()
@@ -35,13 +36,14 @@ public class SubscriptionService {
                 .build();
 
         subscription.connectKeywords(keywords);
-
-        return subscriptionRepository.save(subscription);
+        subscriptionRepository.save(subscription);
+        return SubscriptionResponse.fromEntity(subscription);
     }
 
     @Transactional(readOnly = true)
-    public Subscription getSubscription(Long id) {
-        return subscriptionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("cannot found subscription id = " + id));
+    public SubscriptionResponse getSubscription(Long id) {
+        Subscription subscription = subscriptionRepository.findById(id)
+                .orElseThrow(SubscriptionNotFoundException::new);
+        return SubscriptionResponse.fromEntity(subscription);
     }
 }

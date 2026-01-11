@@ -1,6 +1,9 @@
 package com.github.wooyong.aidigest.service;
 
+import com.github.wooyong.aidigest.dto.UserInfoResponse;
 import com.github.wooyong.aidigest.entity.User;
+import com.github.wooyong.aidigest.exception.DuplicateEmailException;
+import com.github.wooyong.aidigest.exception.UserNotFoundException;
 import com.github.wooyong.aidigest.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +23,9 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User signup(String email, String password, String name) {
+    public UserInfoResponse signup(String email, String password, String name) {
         if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email already in use");
+            throw new DuplicateEmailException();
         }
 
         User user = User.builder()
@@ -33,12 +36,12 @@ public class AuthService {
 
         userRepository.save(user);
         log.info("User '{}' signed up", email);
-        return user;
+        return UserInfoResponse.fromEntity(user);
     }
 
-    public User login(String email, String password) {
+    public UserInfoResponse login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
@@ -52,7 +55,7 @@ public class AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
         log.info("User '{}' logged in", email);
-        return user;
+        return UserInfoResponse.fromEntity(user);
     }
 
     public void logout(HttpSession session) {

@@ -2,6 +2,8 @@ package com.github.wooyong.aidigest.controller;
 
 import com.github.wooyong.aidigest.dto.LoginRequest;
 import com.github.wooyong.aidigest.dto.SignupRequest;
+import com.github.wooyong.aidigest.dto.UserInfoResponse;
+import com.github.wooyong.aidigest.dto.common.CommonResponse;
 import com.github.wooyong.aidigest.entity.User;
 import com.github.wooyong.aidigest.service.AuthService;
 import jakarta.servlet.http.HttpSession;
@@ -21,22 +23,27 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<CommonResponse<UserInfoResponse>> signup(@RequestBody SignupRequest signupRequest) {
         log.info("Signup request received: {}", signupRequest.getEmail());
-        User user = authService.signup(signupRequest.getEmail(),
+
+        UserInfoResponse userInfoResponse = authService.signup(signupRequest.getEmail(),
                 signupRequest.getPassword(),
                 signupRequest.getName());
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(CommonResponse.success(userInfoResponse));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        User user = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(user);
+    public ResponseEntity<CommonResponse<UserInfoResponse>> login(@RequestBody LoginRequest loginRequest) {
+        log.info("Login request received: {}", loginRequest.getEmail());
+
+        UserInfoResponse userInfoResponse = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        return ResponseEntity.ok(CommonResponse.success(userInfoResponse));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpSession session) {
+        log.info("Logout request received");
+
         authService.logout(session);
         return ResponseEntity.ok().build();
     }
